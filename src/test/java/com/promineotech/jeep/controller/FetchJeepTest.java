@@ -27,23 +27,20 @@ import lombok.Getter;
 
 // declaring that test run in a web environment, like the actual program
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles("test") // defines this as a test for the yaml
 @Sql(scripts = {
     "classpath:flyway/migrations/V1.0__Jeep_Schema.sql",
     "classpath:flyway/migrations/V1.1__Jeep_Data.sql"},
     config = @SqlConfig(encoding = "utf-8"))
 class FetchJeepTest {
   
-  /*
-   * a couple of objects to test.
-   */
+  @LocalServerPort
+  private int serverPort;
+
   @Autowired
   @Getter
   private TestRestTemplate restTemplate;
   
-  @LocalServerPort
-  private int serverPort;
-
   /*
    * Test method. Testing that by providing a valid option for our Web app
    * we can establish a connection, and then return a response. Hopefully and OK
