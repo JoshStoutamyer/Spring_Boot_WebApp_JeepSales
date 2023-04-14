@@ -28,9 +28,9 @@ import lombok.Getter;
 // declaring that test run in a web environment, like the actual program
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test") // defines this as a test for the yaml
-@Sql(scripts = {
-    "classpath:flyway/migrations/V1.0__Jeep_Schema.sql",
-    "classpath:flyway/migrations/V1.1__Jeep_Data.sql"},
+@Sql(
+    scripts = {"classpath:flyway/migrations/V1.0__Jeep_Schema.sql", 
+        "classpath:flyway/migrations/V1.1__Jeep_Data.sql"},
     config = @SqlConfig(encoding = "utf-8"))
 class FetchJeepTest {
   
