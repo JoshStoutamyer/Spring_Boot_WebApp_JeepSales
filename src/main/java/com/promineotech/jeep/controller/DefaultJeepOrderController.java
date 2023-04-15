@@ -19,6 +19,8 @@ public class DefaultJeepOrderController implements JeepOrderController {
     log.info("Order={}", orderRequest);
     // returns the Service layer's createOrder method with the orderRequest param
     return jeepOrderService.createOrder(orderRequest);
+    // Wk16 example for red JUnit bar, comment out line 21.
+//    return null;
   }
   
   

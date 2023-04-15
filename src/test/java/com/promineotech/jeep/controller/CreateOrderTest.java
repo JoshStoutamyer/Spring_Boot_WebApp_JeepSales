@@ -53,7 +53,7 @@ class CreateOrderTest {
     // response sends the request body of the test with data for our Order entity
     ResponseEntity<Order> response = restTemplate.exchange(
         uri, HttpMethod.POST, bodyEntity, Order.class);
-    // Then: a 201 status is returned
+    // Then: a 201 status is returned and is not null.
     // Checks whether the test was able to create an order.
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     // checks that our order is not null.
