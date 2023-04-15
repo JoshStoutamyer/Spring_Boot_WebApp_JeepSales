@@ -356,7 +356,7 @@ public class DefaultJeepOrderDao implements JeepOrderDao {
     String sql;
     MapSqlParameterSource source = new MapSqlParameterSource();
   }
-
+  // called by the service layer to hold an order for us.
   @Override
   public Order saveOrder(Customer customer, Jeep jeep, Color color, Engine engine, Tire tire,
       BigDecimal price, List<Option> options) {
@@ -370,6 +370,7 @@ public class DefaultJeepOrderDao implements JeepOrderDao {
     saveOptions(options, orderPK);
      
     // @formatter:off
+    // Builds our order off data from the Order class
     return Order.builder()
         .orderPK(orderPK)
         .customer(customer)

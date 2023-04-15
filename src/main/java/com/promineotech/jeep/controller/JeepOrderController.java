@@ -56,7 +56,7 @@ public interface JeepOrderController {
                 }
             )
         // @formatter:on
-        // maps a get request to the method
+        // maps a post request to the method
         @PostMapping
         // Status update
         @ResponseStatus(code = HttpStatus.CREATED)

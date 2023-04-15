@@ -14,12 +14,14 @@ import com.promineotech.jeep.entity.Tire;
 
 public interface JeepOrderDao {
   List<Option> fetchOptions(List<String> optionIds);
+  // optionals to denote nullable objects
   Optional<Customer> fetchCustomer(String customerId);
   Optional<Jeep> fetchModel(JeepModel model, String trim, int doors);
   Optional<Color> fetchColor(String colorId);
   Optional<Engine> fetchEngine(String engineId);
   Optional<Tire> fetchTire(String tireId);
 
+  
   Order saveOrder(Customer customer, Jeep jeep, Color color, Engine engine, Tire tire,
       BigDecimal price, List<Option> options);
 }

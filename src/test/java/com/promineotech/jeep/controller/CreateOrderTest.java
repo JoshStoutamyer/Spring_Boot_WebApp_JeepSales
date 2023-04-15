@@ -23,14 +23,17 @@ import lombok.Getter;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test") // defines this as a test for the yaml
+// calls schemas in resource
 @Sql(scripts = {
     "classpath:flyway/migrations/V1.0__Jeep_Schema.sql",
     "classpath:flyway/migrations/V1.1__Jeep_Data.sql"},
     config = @SqlConfig(encoding = "utf-8"))
 class CreateOrderTest {
+  // establishes our local port in Tomcat
   @LocalServerPort
   private int serverPort;
 
+  // injected object to send HTTP requests
   @Autowired
   @Getter
   TestRestTemplate restTemplate;
@@ -46,15 +49,18 @@ class CreateOrderTest {
     
     HttpEntity<String> bodyEntity = new HttpEntity<>(body, headers);
     
-    // When: 
+    // When: an order is sent
+    // response sends the request body of the test with data for our Order entity
     ResponseEntity<Order> response = restTemplate.exchange(
         uri, HttpMethod.POST, bodyEntity, Order.class);
     // Then: a 201 status is returned
+    // Checks whether the test was able to create an order.
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    
-    // And: the returned order is correct
+    // checks that our order is not null.
     assertThat(response.getBody()).isNotNull();
     
+    // And: the returned order is correct
+    // the data set out order is checked against
     Order order = response.getBody();
     assertThat(order.getCustomer().getCustomerId()).isEqualTo("MORISON_LINA");
     assertThat(order.getModel().getModelId()).isEqualTo(JeepModel.WRANGLER);
