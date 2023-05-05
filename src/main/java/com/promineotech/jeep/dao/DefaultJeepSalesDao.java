@@ -25,7 +25,7 @@ public class DefaultJeepSalesDao implements JeepSalesDao {
   
   @Override
   public List<Jeep> fetchJeeps(JeepModel model, String trim) {
-    log.info("DAO: model = {}, trim = {}", model, trim); // sow implementation of Dao layer
+    log.info("DAO: model = {}, trim = {}", model, trim); // show implementation of Dao layer
     
 //     Week 15: for first example comment out the sql string, map and map method. 
 //     return null;

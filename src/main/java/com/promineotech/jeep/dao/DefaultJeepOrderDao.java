@@ -33,6 +33,11 @@ public class DefaultJeepOrderDao implements JeepOrderDao {
   @Autowired
   private NamedParameterJdbcTemplate jdbcTemplate;
 
+  class SqlParams {
+    String sql;
+    MapSqlParameterSource source = new MapSqlParameterSource();
+  }
+  
   /**
    * 
    * @param option
@@ -90,6 +95,41 @@ public class DefaultJeepOrderDao implements JeepOrderDao {
     
     return params;
   }
+  
+//called by the service layer to hold an order for us.
+ @Override
+ public Order saveOrder(Customer customer, Jeep jeep, Color color, Engine engine, Tire tire,
+     BigDecimal price, List<Option> options) {
+   
+   SqlParams params = generateInsertSql(customer, jeep, color, engine, tire, price);
+   
+   KeyHolder keyHolder = new GeneratedKeyHolder();
+   jdbcTemplate.update(params.sql, params.source, keyHolder);
+   
+   Long orderPK = keyHolder.getKey().longValue();
+   saveOptions(options, orderPK);
+    
+   // @formatter:off
+   // Builds our order off data from the Order class
+   return Order.builder()
+       .orderPK(orderPK)
+       .customer(customer)
+       .model(jeep)
+       .color(color)
+       .engine(engine)
+       .tire(tire)
+       .options(options)
+       .price(price)
+       .build();
+   // @formatter:on
+ }
+
+ private void saveOptions(List<Option> options, Long orderPK) {
+   for(Option option : options) {
+     SqlParams params = generateInsertSql(option, orderPK); 
+     jdbcTemplate.update(params.sql, params.source);
+   }
+ }
 
   /**
    * 
@@ -351,45 +391,5 @@ public class DefaultJeepOrderDao implements JeepOrderDao {
 
     }
   }
-
-  class SqlParams {
-    String sql;
-    MapSqlParameterSource source = new MapSqlParameterSource();
-  }
-  // called by the service layer to hold an order for us.
-  @Override
-  public Order saveOrder(Customer customer, Jeep jeep, Color color, Engine engine, Tire tire,
-      BigDecimal price, List<Option> options) {
-    
-    SqlParams params = generateInsertSql(customer, jeep, color, engine, tire, price);
-    
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    jdbcTemplate.update(params.sql, params.source, keyHolder);
-    
-    Long orderPK = keyHolder.getKey().longValue();
-    saveOptions(options, orderPK);
-     
-    // @formatter:off
-    // Builds our order off data from the Order class
-    return Order.builder()
-        .orderPK(orderPK)
-        .customer(customer)
-        .model(jeep)
-        .color(color)
-        .engine(engine)
-        .tire(tire)
-        .options(options)
-        .price(price)
-        .build();
-    // @formatter:on
-  }
-
-  private void saveOptions(List<Option> options, Long orderPK) {
-    for(Option option : options) {
-      SqlParams params = generateInsertSql(option, orderPK); 
-      jdbcTemplate.update(params.sql, params.source);
-    }
-  }
-
 }
 
